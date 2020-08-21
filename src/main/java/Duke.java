@@ -1,9 +1,10 @@
+import cmd.CDuke;
 
 public class Duke {
 
     public static void main(String[] args) {
-        DukeCmd dukeCmd = new DukeCmd();
-        dukeCmd.run();
+        CDuke CDuke = new CDuke();
+        CDuke.run();
     }
 
 }

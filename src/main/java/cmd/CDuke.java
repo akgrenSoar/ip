@@ -1,12 +1,15 @@
+package cmd;
+
 import task.Task;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DukeCmd {
+public class CDuke {
 
     private static final String LOGO = ""
             + " ____        _        \n"
@@ -22,7 +25,7 @@ public class DukeCmd {
     private final List<Task> taskList;
     private final Scanner scanner;
 
-    public DukeCmd() {
+    public CDuke() {
         this.taskList = new ArrayList<>(100);
         this.scanner = new Scanner(System.in);
     }
@@ -35,17 +38,19 @@ public class DukeCmd {
         while(true) {
 
             // Prompt for input
-            Matcher matcher = INPUT_PATTERN.matcher(scanner.nextLine());
+            String input = scanner.nextLine();
+            Matcher matcher = INPUT_PATTERN.matcher(input);
 
             // No input received, skip
             if (!matcher.matches()) continue;
 
             // Look up command and execute
-            DukeCmdEnum key = DukeCmdEnum.fromString(matcher.group(1));
-            key.execute(this.taskList, matcher.group(2));
+            CommandType type = CommandType.get(matcher.group(1));
+            Consumer<List<Task>> exec = type.generate(matcher.group(2));
+            exec.accept(taskList);
 
-            // Exit DukeCmd
-            if (key.equals(DukeCmdEnum.BYE)) {
+            // Exit CDuke
+            if (type.equals(CommandType.BYE)) {
                 break;
             }
         }

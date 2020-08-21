@@ -1,17 +1,19 @@
 package task;
 
+import java.time.LocalDate;
+
 public class Deadline extends Task {
 
-    private String deadline;
+    private LocalDate deadline;
 
-    public Deadline(String description, String deadline) {
+    public Deadline(String description, LocalDate deadline) {
         super(description);
         this.deadline = deadline;
     }
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + deadline + ")";
+        return "[D]" + super.toString() + " (by: " + deadline.toString() + ")";
     }
 
 }
