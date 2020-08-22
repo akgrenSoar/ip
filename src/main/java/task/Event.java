@@ -1,18 +1,31 @@
 package task;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+/**
+ * An Event is a Task with startTime, and endTime
+ */
 public class Event extends Task{
 
-    private LocalDate eventTime;
+    private DukeDateTime eventStart;
+    private DukeDateTime eventEnd;
 
-    public Event(String description, LocalDate eventTime) {
+    public Event(String description, DukeDateTime eventStart, DukeDateTime eventEnd) {
         super(description);
-        this.eventTime = eventTime;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
+    }
+
+    public LocalDateTime getStart() {
+        return this.eventStart.get();
+    }
+
+    public LocalDateTime getEnd() {
+        return this.eventEnd.get();
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (at: " + eventTime.toString() + ")";
+        return "[E]" + super.toString() + " (from: " + eventStart + " till: " + eventEnd + ")";
     }
 }

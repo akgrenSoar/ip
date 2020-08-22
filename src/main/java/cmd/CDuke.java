@@ -9,6 +9,9 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Command line application for Duke
+ */
 public class CDuke {
 
     private static final String LOGO = ""
@@ -30,6 +33,9 @@ public class CDuke {
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Main logic for Duke commandline
+     */
     public void run() {
 
         System.out.println("Hello from\n" + LOGO);

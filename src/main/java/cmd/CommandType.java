@@ -1,17 +1,17 @@
 package cmd;
 
-import task.Deadline;
-import task.Event;
-import task.Task;
-import task.ToDo;
+import task.*;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Enum containing all valid command lines for CDuke
+ * Also contains code for execution of those commands
+ */
 public enum CommandType {
 
     BYE {
@@ -92,14 +92,14 @@ public enum CommandType {
                 Matcher m = p.matcher(commandParam);
                 if (m.matches() && !m.group(1).isBlank() && !m.group(2).isBlank()) {
                     try {
-                        Task task = new Deadline(m.group(1).trim(), toDate(m.group(2).trim()));
+                        Task task = new Deadline(m.group(1).trim(), DukeDateTime.generate(m.group(2).trim()));
                         taskList.add(task);
                         System.out.println("\t+ Add Deadline: " + task.toString());
                     } catch (DateTimeParseException e) {
-                        System.out.println("Date Error: Deadline {description} /by {yyyy-mm-dd}");
+                        System.out.println("Date Error: Deadline {description} /by {ddMMyyyy HHmm}");
                     }
                 } else {
-                    System.out.println("Format Error: Deadline {description} /by {deadline}");
+                    System.out.println("Format Error: Deadline {description} /by {ddMMyyyy HHmm}");
                 }
             };
         }
@@ -109,18 +109,18 @@ public enum CommandType {
         @Override
         public Consumer<List<Task>> generate(String commandParam) {
             return (taskList) -> { // Add event to taskList
-                Pattern p = Pattern.compile("^(.+)\\/at(.+)$");
+                Pattern p = Pattern.compile("^(.+)\\/from(.+)\\/till(.+)$");
                 Matcher m = p.matcher(commandParam);
                 if (m.matches() && !m.group(1).isBlank() && !m.group(2).isBlank()) {
                     try {
-                        Task task = new Event(m.group(1).trim(), toDate(m.group(2).trim()));
+                        Task task = new Event(m.group(1).trim(), DukeDateTime.generate(m.group(2).trim()), DukeDateTime.generate(m.group(3).trim()));
                         taskList.add(task);
                         System.out.println("\t+ Add Event: " + task.toString());
                     } catch (DateTimeParseException e) {
-                        System.out.println("Date Error: Event {description} /at {yyyy-mm-dd}");
+                        System.out.println("Date Error: Event {description} /from {ddMMyyyy HHmm} /till {ddMMyyyy HHmm}");
                     }
                 } else {
-                    System.out.println("Format Error: Event {description} /at {time}");
+                    System.out.println("Format Error: Event {description} /from {ddMMyyyy HHmm} /till {ddMMyyyy HHmm}");
                 }
             };
         }
@@ -136,7 +136,7 @@ public enum CommandType {
     };
 
     /**
-     * Generate the command
+     * Generate the command based on given secondary parameters
      * @param commandParam Command parameters (If required)
      * @return Consumer which executes the command on given taskList
      */
@@ -144,7 +144,6 @@ public enum CommandType {
 
     /**
      * Convert a CDuke command (String) to its corresponding CommandType
-     *
      * @param commandName The CDukeCmd command
      * @return The corresponding CommandType
      */
@@ -154,10 +153,6 @@ public enum CommandType {
             if (s.equals(commandType.toString())) return commandType;
         }
         return CommandType.UNDEFINED;
-    }
-
-    private static LocalDate toDate(String date) {
-        return LocalDate.parse(date);
     }
 
 }

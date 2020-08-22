@@ -1,5 +1,8 @@
 package task;
 
+/**
+ * A task is a is an item that has a description and is completable
+ */
 public class Task {
 
     private String description;
