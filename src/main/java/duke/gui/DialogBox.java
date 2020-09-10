@@ -1,46 +1,61 @@
 package duke.gui;
 
+import java.io.IOException;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Rectangle;
 
 /**
  * A speech bubble that can be displayed in the chatbox
  */
 public class DialogBox extends HBox {
 
-    private final Label text;
-    private final ImageView displayPicture;
+    @FXML
+    private Label dialog;
+    @FXML
+    private ImageView displayPicture;
 
     /**
      * Generate a DialogBox
-     * @param label A label containing message text
-     * @param imageView The user's picture
+     * @param text Message text of dialog box
+     * @param img The user's picture
      */
-    public DialogBox(Label label, ImageView imageView) {
-        this.text = label;
-        this.displayPicture = imageView;
+    public DialogBox(String text, Image img) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
+            fxmlLoader.setController(this);
+            fxmlLoader.setRoot(this);
+            fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        this.text.setWrapText(true);
-        this.displayPicture.setFitWidth(100.0);
-        this.displayPicture.setFitHeight(100.0);
+        dialog.setText(text);
+        displayPicture.setImage(img);
+
+//        this.text.setWrapText(true);
+//        this.displayPicture.setFitWidth(100.0);
+//        this.displayPicture.setFitHeight(100.0);
 
         // Source: https://stackoverflow.com/a/20490028/6943913
-        Rectangle clip = new Rectangle(
-                imageView.boundsInParentProperty().get().getWidth(),
-                imageView.boundsInParentProperty().get().getHeight());
-        clip.setArcWidth(20);
-        clip.setArcHeight(20);
-        this.displayPicture.setClip(clip);
+//        Rectangle clip = new Rectangle(
+//                imageView.boundsInParentProperty().get().getWidth(),
+//                imageView.boundsInParentProperty().get().getHeight());
+//        clip.setArcWidth(20);
+//        clip.setArcHeight(20);
+//        this.displayPicture.setClip(clip);
 
-        this.setSpacing(15);
-        this.setAlignment(Pos.TOP_RIGHT);
-        this.getChildren().addAll(this.text, this.displayPicture);
+//        this.setSpacing(15);
+//        this.setAlignment(Pos.TOP_RIGHT);
+//        this.getChildren().addAll(this.text, this.displayPicture);
     }
 
     /**
@@ -55,34 +70,34 @@ public class DialogBox extends HBox {
 
     /**
      * Generate a user speech bubble
-     * @param label A label containing user's input
-     * @param imageView The user's profile picture
+     * @param message Message text of user's input
+     * @param image The user's profile picture
      * @return The user's speech bubble
      */
-    public static DialogBox getUserDialog(Label label, ImageView imageView) {
-        return new DialogBox(label, imageView);
+    public static DialogBox getUserDialog(String message, Image image) {
+        return new DialogBox(message, image);
     }
 
     /**
      * Generate a duke speech bubble
-     * @param label A label containing duke's output
-     * @param imageView The duke's profile picture
+     * @param message Message text of duke's output
+     * @param image The duke's profile picture
      * @return The duke's speech bubble
      */
-    public static DialogBox getDukeDialog(Label label, ImageView imageView) {
-        DialogBox dialogBox = new DialogBox(label, imageView);
+    public static DialogBox getDukeDialog(String message, Image image) {
+        DialogBox dialogBox = new DialogBox(message, image);
         dialogBox.flip();
         return dialogBox;
     }
 
     /**
      * Generate a error message speech bubble
-     * @param label A label containing error message
-     * @param imageView The error message's profile picture
+     * @param message Message text of error message
+     * @param image The error message's profile picture
      * @return The error message's speech bubble
      */
-    public static DialogBox getErrorDialog(Label label, ImageView imageView) {
-        DialogBox dialogBox = new DialogBox(label, imageView);
+    public static DialogBox getErrorDialog(String message, Image image) {
+        DialogBox dialogBox = new DialogBox(message, image);
         dialogBox.flip();
         dialogBox.setStyle("-fx-background-color: #ffcccc");
         return dialogBox;
